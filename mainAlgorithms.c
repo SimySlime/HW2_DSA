@@ -18,13 +18,13 @@ void run_test(void (*sort_ptr)(int*, int), const char* name, int size) {
     clock_t end = clock();
 
     // 3. Report and Save
+    
     double time_ms = ((double)(end - start) / CLOCKS_PER_SEC) * 1000.0;
     printf("Time (%s | Size: %d): %.4f ms\n", name, size, time_ms);
 
     sprintf(filename, "sortedarr%d.txt", size);
     initialize_sortedArray(filename, array, n);
-
-    free(array); // Clean up memory!
+    free(array); 
 }
 int main(void){
 
@@ -32,7 +32,6 @@ int main(void){
     int sizes[] = {40, 1000, 6000, 10000};
     int num_sizes = sizeof(sizes) / sizeof(sizes[0]);
 
-    printf("--- Starting Benchmarks ---\n");
 
     for (int i = 0; i < num_sizes; i++) {
         run_test(insertion_sort, "Insertion Sort", sizes[i]);
