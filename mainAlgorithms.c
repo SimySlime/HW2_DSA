@@ -44,6 +44,11 @@ int main(void){
         run_test(merge_sort, "Merge Sort", sizes[i]);
     }
 
+    printf("\n");
+
+    for (int i = 0; i < num_sizes; i++) {
+        run_test(heap_sort, "Heap Sort", sizes[i]);
+    }
     
     return 0;
 }
