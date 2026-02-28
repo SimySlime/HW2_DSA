@@ -3,183 +3,47 @@
 #include <time.h>
 #include "AlgorithmLib.h"
 #include "initializeArrays.h"
+void run_test(void (*sort_ptr)(int*, int), const char* name, int size) {
+    int *array = malloc(size * sizeof(int));
+    int n = 0;
+    char filename[50];
 
+    // 1. Load the data
+    sprintf(filename, "unsortedarr%d.txt", size);
+    initialize_unsortedArray(filename, array, size, &n);
+
+    // 2. Time the execution
+    clock_t start = clock();
+    sort_ptr(array, n);
+    clock_t end = clock();
+
+    // 3. Report and Save
+    double time_ms = ((double)(end - start) / CLOCKS_PER_SEC) * 1000.0;
+    printf("Time (%s | Size: %d): %.4f ms\n", name, size, time_ms);
+
+    sprintf(filename, "sortedarr%d.txt", size);
+    initialize_sortedArray(filename, array, n);
+
+    free(array); // Clean up memory!
+}
 int main(void){
 
-    int array40[40];
-    int array1000[1000];
-    int array6000[6000];
-    int array10000[10000];
-    int n1000 = 0;
-    int n40 = 0;
-    int n6000 = 0;
-    int n10000 = 0;
-    const char *unsortedArray40 = "unsortedarr40.txt";
-    const char *sortedArray40 = "sortedarr40.txt";
-    const char *unsortedArray1000 = "unsortedarr1000.txt";
-    const char *sortedArray1000 = "sortedarr1000.txt";
-    const char *unsortedArray6000 = "unsortedarr6000.txt";
-    const char *sortedArray6000 = "sortedarr6000.txt";
-    const char *unsortedArray10000 = "unsortedarr10000.txt";
-    const char *sortedArray10000 = "sortedarr10000.txt";
-    clock_t start, end;
-    double time_used;
-    
+   
+    int sizes[] = {40, 1000, 6000, 10000};
+    int num_sizes = sizeof(sizes) / sizeof(sizes[0]);
 
-    initialize_unsortedArray(unsortedArray40, array40, 40, &n40);
+    printf("--- Starting Benchmarks ---\n");
+
+    for (int i = 0; i < num_sizes; i++) {
+        run_test(insertion_sort, "Insertion Sort", sizes[i]);
+    }
+    
     printf("\n");
 
-    //timer to measure function speed start
+    for (int i = 0; i < num_sizes; i++) {
+        run_test(merge_sort, "Merge Sort", sizes[i]);
+    }
+
     
-
-    start = clock();
-
-    insertion_sort(array40, n40);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    
-
-    // speed test end
-    printf("Time (Insertion sort Array size: 40): %f milliseconds\n", time_used*1000.0);
-    initialize_sortedArray(sortedArray40, array40, n40);
-    initialize_unsortedArray(unsortedArray1000, array1000, 1000, &n1000);
-
-    start = clock();
-
-    insertion_sort(array1000, n1000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    initialize_sortedArray(sortedArray1000, array1000, n1000);
-    printf("Time (Insertion sort Array size: 1000): %f milliseconds\n", time_used*1000.0);
-    //arr6000.txt
-    initialize_unsortedArray(unsortedArray6000, array6000, 6000, &n6000);
-    start = clock();
-
-    insertion_sort(array6000, n6000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time (Insertion sort Array size: 6000): %f milliseconds\n", time_used*1000.0);   
-    initialize_sortedArray(sortedArray6000, array6000, n6000);
- 
-    //arr10000.txt start
-    initialize_unsortedArray(unsortedArray10000, array10000, 10000, &n10000);
-
-    start = clock();
-    insertion_sort(array10000, n10000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    
-
-    // speed test end
-    initialize_sortedArray(sortedArray10000, array10000, n10000);
-    printf("Time (Insertion sort Array size: 10000): %f milliseconds\n", time_used*1000.0);
-
-    //arr10000.txt end
-    printf("\n");
-
-    start = clock();
-
-    merge_sort(array40, n40);
-
-    end = clock();
-    
-    initialize_unsortedArray(unsortedArray40, array40, 40, &n40);
-
-    //timer to measure function speed start
-    
-    start = clock();
-
-    merge_sort(array40, n40);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time (merge sort Array size: 40): %f milliseconds\n", time_used*1000.0);
-    initialize_sortedArray(sortedArray40, array40, n40);
-
-    initialize_unsortedArray(unsortedArray1000, array1000, 1000, &n1000);
-
-    start = clock();
-
-    merge_sort(array1000, n1000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time (merge sort Array size: 1000): %f milliseconds\n", time_used*1000.0);
-    initialize_sortedArray(sortedArray1000, array1000, n1000);
-
-    initialize_unsortedArray(unsortedArray6000, array6000, 6000, &n6000);
-    start = clock();
-
-    merge_sort(array6000, n6000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time (merge sort Array size: 6000): %f milliseconds\n", time_used*1000.0);   
-    initialize_sortedArray(sortedArray6000, array6000, n6000);
- 
-    //arr10000.txt start
-    initialize_unsortedArray(unsortedArray10000, array10000, 10000, &n10000);
-
-    start = clock();
-    merge_sort(array10000, n10000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    
-
-    // speed test end
-    initialize_sortedArray(sortedArray10000, array10000, n10000);
-    printf("Time (merge sort Array size: 10000): %f milliseconds\n", time_used*1000.0);
-
-    //arr10000.txt end
-    printf("\n");
-    initialize_unsortedArray(unsortedArray40, array40, 40, &n40);
-
-    start = clock();
-    heap_sort(array40, n40);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time (heap sort Array size: 40): %f milliseconds\n", time_used*1000.0);
-    initialize_sortedArray(sortedArray40, array40, n40);
-
-    initialize_unsortedArray(unsortedArray1000, array1000, 1000, &n1000);
-
-    start = clock();
-
-    heap_sort(array1000, n1000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time (heap sort Array size: 1000): %f milliseconds\n", time_used*1000.0);
-    initialize_sortedArray(sortedArray1000, array1000, n1000);
-    initialize_unsortedArray(unsortedArray6000, array6000, 6000, &n6000);
-    start = clock();
-
-    heap_sort(array6000, n6000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("Time (heap sort Array size: 6000): %f milliseconds\n", time_used*1000.0);   
-    initialize_sortedArray(sortedArray6000, array6000, n6000);
- 
-    //arr10000.txt start
-    initialize_unsortedArray(unsortedArray10000, array10000, 10000, &n10000);
-
-    start = clock();
-    heap_sort(array10000, n10000);
-
-    end = clock();
-    time_used = (double)(end - start) / CLOCKS_PER_SEC;
-    
-
-    // speed test end
-    initialize_sortedArray(sortedArray10000, array10000, n10000);
-    printf("Time (heap sort Array size: 10000): %f milliseconds\n", time_used*1000.0);
-
     return 0;
 }
